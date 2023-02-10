@@ -1,0 +1,92 @@
+import { LinearGradient } from 'expo-linear-gradient';
+import { useState } from 'react';
+import {
+  ImageBackground,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
+import Colors from './constants/colors';
+import GameOverScreen from './screens/GameOverScreen';
+import GameScreen from './screens/GameScreen';
+import StartGameScreen from './screens/StartGameScreen';
+import { useFonts } from 'expo-font';
+import AppLoading from 'expo-app-loading';
+
+export default function App() {
+  const [userNumber, setUserNumber] = useState();
+  const [isGameOver, setIsGameOver] = useState(true);
+  const [totalRounds, setTotalRounds] = useState(0);
+
+  const [fontsLoaded] = useFonts({
+    'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
+    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+
+  function userNumberHandler(chosenNumber) {
+    setUserNumber(chosenNumber);
+    setIsGameOver(false);
+  }
+
+  function gameOverHandler(totalRoundsNumber) {
+    setIsGameOver(true);
+    setTotalRounds(totalRoundsNumber);
+  }
+
+  function startNewGameHandler() {
+    setUserNumber(null);
+  }
+
+  let screen = <StartGameScreen onConfirm={userNumberHandler} />;
+
+  if (userNumber) {
+    screen = (
+      <GameScreen userNumber={userNumber} onGameOver={gameOverHandler} />
+    );
+  }
+
+  if (userNumber && isGameOver) {
+    screen = (
+      <GameOverScreen
+        totalRounds={totalRounds}
+        userNumber={userNumber}
+        onStartNewGame={startNewGameHandler}
+      />
+    );
+  }
+
+  return (
+    <LinearGradient
+      colors={[Colors.primary400, Colors.accent500]}
+      style={styles.rootScreen}
+    >
+      <ImageBackground
+        source={require('./assets/images/background.png')}
+        resizeMode="cover"
+        style={styles.rootScreen}
+        imageStyle={styles.backgroundImage}
+      >
+        <SafeAreaView style={styles.safeArea}>{screen}</SafeAreaView>
+      </ImageBackground>
+    </LinearGradient>
+  );
+}
+
+const styles = StyleSheet.create({
+  rootScreen: {
+    flex: 1,
+  },
+  backgroundImage: {
+    opacity: 0.15,
+  },
+  safeArea: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+  },
+});
