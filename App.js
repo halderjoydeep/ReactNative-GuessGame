@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 import {
   ImageBackground,
@@ -6,14 +5,14 @@ import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
-  View,
 } from 'react-native';
-import Colors from './constants/colors';
-import GameOverScreen from './screens/GameOverScreen';
-import GameScreen from './screens/GameScreen';
-import StartGameScreen from './screens/StartGameScreen';
+
+import { LinearGradient } from 'expo-linear-gradient';
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
+
+import { StartGameScreen, GameScreen, GameOverScreen } from './screens';
+import Colors from './constants/colors';
 
 export default function App() {
   const [userNumber, setUserNumber] = useState();

@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Alert, FlatList, StyleSheet, Text, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Alert, FlatList, StyleSheet, View, Dimensions } from 'react-native';
 
-import Title from '../components/ui/Title';
-import PrimaryButton from '../components/ui/PrimaryButton';
-import Card from '../components/ui/Card';
-import InstructionText from '../components/ui/InstructionText';
-import NumberContainer from '../components/game/NumberContainer';
-import GuessLogItem from '../components/game/GuessLogItem';
+import { Title, Card, InstructionText, PrimaryButton } from '../components/ui';
+import { NumberContainer, GuessLogItem } from '../components/game';
+
+import { Ionicons } from '@expo/vector-icons';
 
 function generateRandomBetween(min, max, exclude) {
   const rndNum = Math.floor(Math.random() * (max - min)) + min;
@@ -21,6 +18,9 @@ function generateRandomBetween(min, max, exclude) {
 let minBoundary = 1;
 let maxBoundary = 100;
 
+const deviceWidth = Dimensions.get('window').width;
+const buttonIconSize = deviceWidth < 400 ? 14 : 24;
+
 export default function GameScreen({ userNumber, onGameOver }) {
   const initialGuess = generateRandomBetween(1, 100, userNumber);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
@@ -33,6 +33,7 @@ export default function GameScreen({ userNumber, onGameOver }) {
       // Resetting the boundaries for next round
       minBoundary = 1;
       maxBoundary = 100;
+      // Game Over
       onGameOver(totalRounds);
     }
   }, [currentGuess, userNumber, onGameOver]);
@@ -65,9 +66,10 @@ export default function GameScreen({ userNumber, onGameOver }) {
   }
 
   return (
-    <View style={styles.screen}>
+    <View style={styles.rootScreen}>
       <Title>Opponent's Guess</Title>
       <NumberContainer>{currentGuess}</NumberContainer>
+
       <Card>
         <InstructionText style={styles.instructionText}>
           Higher or Lower?
@@ -75,12 +77,12 @@ export default function GameScreen({ userNumber, onGameOver }) {
         <View style={styles.buttonsContainer}>
           <View style={styles.buttonContainer}>
             <PrimaryButton onPress={nextGuessHandler.bind(null, 'lower')}>
-              <Ionicons name="md-remove" size={24} color="white" />
+              <Ionicons name="md-remove" size={buttonIconSize} color="white" />
             </PrimaryButton>
           </View>
           <View style={styles.buttonContainer}>
             <PrimaryButton onPress={nextGuessHandler.bind(null, 'higher')}>
-              <Ionicons name="md-add" size={24} color="white" />
+              <Ionicons name="md-add" size={buttonIconSize} color="white" />
             </PrimaryButton>
           </View>
         </View>
@@ -102,9 +104,10 @@ export default function GameScreen({ userNumber, onGameOver }) {
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  rootScreen: {
     flex: 1,
     padding: 24,
+    alignItems: 'center',
   },
   instructionText: {
     marginBottom: 20,
@@ -112,12 +115,15 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    paddingHorizontal: deviceWidth < 400 ? 10 : 0,
   },
   buttonContainer: {
     flex: 1,
+    marginHorizontal: 10,
   },
   listContainer: {
     flex: 1,
     padding: 16,
+    alignSelf: 'stretch',
   },
 });

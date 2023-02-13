@@ -1,6 +1,5 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
-import PrimaryButton from '../components/ui/PrimaryButton';
-import Title from '../components/ui/Title';
+import { Image, StyleSheet, Text, View, Dimensions } from 'react-native';
+import { Title, PrimaryButton } from '../components/ui';
 import Colors from '../constants/colors';
 
 export default function GameOverScreen({
@@ -9,7 +8,7 @@ export default function GameOverScreen({
   onStartNewGame,
 }) {
   return (
-    <View style={styles.rootContainer}>
+    <View style={styles.rootScreen}>
       <Title>GAME OVER!</Title>
       <View style={styles.imageContainer}>
         <Image
@@ -27,18 +26,21 @@ export default function GameOverScreen({
   );
 }
 
+const deviceWidth = Dimensions.get('window').width;
+const imageWidth = deviceWidth < 400 ? 200 : 300;
+
 const styles = StyleSheet.create({
-  rootContainer: {
+  rootScreen: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
   },
   imageContainer: {
-    width: 300,
-    height: 300,
-    margin: 36,
-    borderRadius: 150,
+    width: imageWidth,
+    height: imageWidth,
+    margin: deviceWidth < 400 ? 20 : 36,
+    borderRadius: imageWidth / 2,
     borderWidth: 3,
     borderColor: Colors.primary800,
     overflow: 'hidden',
@@ -49,7 +51,7 @@ const styles = StyleSheet.create({
   },
   summaryText: {
     fontFamily: 'open-sans',
-    fontSize: 24,
+    fontSize: deviceWidth < 400 ? 18 : 24,
     textAlign: 'center',
     marginHorizontal: 10,
     marginVertical: 20,
