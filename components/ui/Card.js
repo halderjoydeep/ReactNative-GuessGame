@@ -9,6 +9,7 @@ const deviceWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   card: {
+    maxWidth: '90%',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: deviceWidth < 400 ? 20 : 36,
